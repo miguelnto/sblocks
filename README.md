@@ -1,5 +1,7 @@
 # sblocks
 
+![sblocks](doc/print.png)
+
 sblocks is a modular status bar for dwm-like X11 window managers.
 
 ## Requirements
