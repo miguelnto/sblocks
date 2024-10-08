@@ -1,13 +1,11 @@
 include config.mk
 
 SRC = ${SRCDIR}/*.c
-OBJ = ${SRC:.c=.o}
 
 all: dirs options ${MAIN} 
 
 dirs:
 	mkdir -p bin
-	mkdir -p obj
 
 options:
 	@echo ${MAIN} build options:
@@ -15,25 +13,15 @@ options:
 	@echo "LDFLAGS = ${LDFLAGS}"
 	@echo "CC = ${CC}"
 
-.c.o:
-	${CC} -c ${CFLAGS} ${SRC}
-	mv -f ./*.o ${OBJDIR}
-
-${MAIN}: ${OBJ}
-	${CC} -o ${BIN}/$@ ${OBJDIR}/*.o ${LDFLAGS}
-
-analyze:
-	cppcheck --enable=all --check-level=exhaustive --suppress=missingIncludeSystem src/
-
-clean:
-	rm -f ${BIN}/${MAIN} ${OBJDIR}/*.o
+${MAIN}: 
+	${CC} ${CFLAGS} ${LDFLAGS} ${SRC} -o ${BIN}/$@ 
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -m 0755 ${BIN}/${MAIN} $(DESTDIR)$(PREFIX)/bin/${MAIN}
+	install -m 0755 ${BIN}/${MAIN} $(DESTDIR)$(PREFIX)/${MAIN}
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/${MAIN}
+	rm -f $(DESTDIR)$(PREFIX)/${MAIN}
 
-.PHONY: all options clean install uninstall
+.PHONY: dirs all options install uninstall
 

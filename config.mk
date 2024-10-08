@@ -6,22 +6,16 @@ MAIN = sblocks
 # Output directory for the executable file
 BIN = bin
 
-# Output directory for *.o files
-OBJDIR = obj
-
 # Source code directory
 SRCDIR = src
 
-# Paths
-PREFIX = /usr/local
-
-# Includes and libs
-LIBS = -lX11
+# Install directory
+PREFIX = /usr/local/bin
 
 # Flags
-CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700L  
+CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700L
 CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Wunused -Wunused-function -Wunused-local-typedefs -Wunused-macros -Wno-deprecated-declarations -Os ${CPPFLAGS}
-LDFLAGS = ${LIBS}
+LDFLAGS = -lX11
 
 # Compiler
 CC = cc
