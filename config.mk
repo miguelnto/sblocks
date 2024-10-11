@@ -19,4 +19,3 @@ LDFLAGS = -lX11
 
 # Compiler
 CC = cc
-

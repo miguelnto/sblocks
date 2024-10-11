@@ -124,12 +124,12 @@ void terminate_handler(i32 signum) {
 
 i32 main(void) {
     if (!setupX()) {
-        return 1;
+        return EXIT_FAILURE;
     }
     signal(SIGTERM, terminate_handler);
     signal(SIGINT, terminate_handler);
     status_loop();
     XCloseDisplay(dpy);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
