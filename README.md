@@ -8,12 +8,14 @@ sblocks is a modular status bar for dwm-like X11 window managers.
 
 In order to build this project, you need:
 
+- A C99 Compiler
 - GNU Make
-- Xlib (X11)
+- libx11
+- libfreetype2
 
 ## Build
 
-This project is meant to be built using GNU Make, running the following command:
+You can build this project by running `make`:
 
 ```sh
 make
@@ -29,6 +31,8 @@ Enter the following command to build and install (if necessary, run it as root):
 make clean install
 ```
 
+By default, the program is installed in `/usr/local/bin`.
+
 ## Usage
 
 Put **sblocks** in your `.xinitrc` file or other startup script to have it start with your window manager. For example:
@@ -41,6 +45,10 @@ exec ndwm
 ## TODO
 
 - [ ] Configuration should be done in a proper .conf file, or a .toml file.
+
+## Default scripts
+
+This section is under development.
 
 ## Configuration
 

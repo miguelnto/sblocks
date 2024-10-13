@@ -17,11 +17,10 @@ ${MAIN}:
 	${CC} ${CFLAGS} ${LDFLAGS} ${SRC} -o ${BIN}/$@ 
 
 install: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -m 0755 ${BIN}/${MAIN} $(DESTDIR)$(PREFIX)/${MAIN}
+	mkdir -p ${DESTDIR}${INSTALLDIR}
+	install -m 0755 ${BIN}/${MAIN} ${DESTDIR}${INSTALLDIR}/${MAIN}
 
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/${MAIN}
+	rm -f ${DESTDIR}${INSTALLDIR}/${MAIN}
 
 .PHONY: dirs all options install uninstall
-

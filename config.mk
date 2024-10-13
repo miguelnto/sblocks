@@ -10,11 +10,11 @@ BIN = bin
 SRCDIR = src
 
 # Install directory
-PREFIX = /usr/local/bin
+INSTALLDIR = /usr/local/bin
 
 # Flags
-CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_XOPEN_SOURCE=700L
-CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Wunused -Wunused-function -Wunused-local-typedefs -Wunused-macros -Wno-deprecated-declarations -Os ${CPPFLAGS}
+CPPFLAGS = -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=700L
+CFLAGS   = -std=c99 -pedantic -Wall -Wextra -Wunused -Wunused-function -Wunused-local-typedefs -Wunused-macros -Os ${CPPFLAGS}
 LDFLAGS = -lX11
 
 # Compiler
