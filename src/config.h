@@ -1,21 +1,38 @@
-/* TODO: This config file shouldn't exist. Instead, the user should configure the program in a .conf or .toml file  */
 #ifndef SBLOCKS_CONFIG_H
 #define SBLOCKS_CONFIG_H
 
-#include "block.h"
+#include <stdint.h>
 
-#define MAX_OUTPUT_LENGTH 50
+typedef int32_t   i32;
+typedef uint32_t  u32;
 
-/* Delimiter between command outputs */
-static const char *delim = " | ";
-
-/* Modify this to change what appears in your status bar */
-static const Block blocks[] = {
-	/* Command		        Update Interval      Update Signal */
-	{"battery",            1,	3},
-	{"vol",               0,       10},
-	{"date '+%a %d %b %R'",60,       1},
+typedef struct Block Block;
+struct Block {
+    char *command;
+    i32 interval;
+    u32 signal;
 };
+
+/* 
+NOTE:
+- The delimeter can be 3 characters long at most.
+- The maximum number of characters for the output is 100.
+- The maximum number of blocks is 20. 
+*/
+#define MAX_DELIM_LEN 3
+#define MAX_OUTPUT_LEN 100
+#define MAX_BLOCKS_LEN  20
+#define STATUS_LEN  (MAX_BLOCKS_LEN * MAX_OUTPUT_LEN + 1)
+
+typedef struct Config Config;
+struct Config {
+    char delimeter[3];
+    u32 blocks_len;
+    Block *blocks;
+};
+
+Config *config_init(const char *filename);
+void config_deinit(Config *config);
 
 #endif
 

@@ -6,9 +6,7 @@
 #include <stdbool.h>
 #include "config.h"
 #include <X11/Xlib.h>
-
-#define BLOCKS_LENGTH  (sizeof(blocks) / sizeof (blocks[0]))
-#define STATUS_LENGTH  (BLOCKS_LENGTH * MAX_OUTPUT_LENGTH + 1)
+#include <pwd.h>
 
 static void get_cmd(const char *command, char *output);
 static void get_cmds(i32 time);
@@ -20,12 +18,14 @@ static void status_loop(void);
 static void terminate_handler(i32 signum);
 static void set_root(void);
 static bool setupX(void);
+static void get_config_path(char *path);
 
+static Config *conf;
 static Display *dpy;
 static Window root;
-static char status_bar[BLOCKS_LENGTH][MAX_OUTPUT_LENGTH] = {0};
-static char current_status_str[STATUS_LENGTH];
-static char last_status_str[STATUS_LENGTH];
+static char status_bar[MAX_BLOCKS_LEN][MAX_OUTPUT_LEN] = {0};
+static char current_status_str[STATUS_LEN];
+static char last_status_str[STATUS_LEN];
 static bool status_continue = true;
 
 /* Opens process and stores output in output */
@@ -35,28 +35,28 @@ void get_cmd(const char *command, char *output) {
         return;
     }
 
-    const u32 delim_len = strlen(delim)+1;
-    fgets(output, MAX_OUTPUT_LENGTH-delim_len, cmd_file);
+    const u32 delim_len = strlen(conf->delimeter)+1;
+    fgets(output, MAX_OUTPUT_LEN-delim_len, cmd_file);
     u32 output_len = strlen(output);
 
     /* Only chop off newline if one is present at the end */
     output_len = output[output_len-1] == '\n' ? output_len-1 : output_len;
-    strncpy(output+output_len, delim, delim_len);   
+    strncpy(output+output_len, conf->delimeter, delim_len);   
     pclose(cmd_file);
 }
 
 void get_cmds(i32 time) {
-    for (u32 i = 0; i < BLOCKS_LENGTH; i++) {
-        if ((blocks[i].interval != 0 && time % blocks[i].interval == 0) || time == -1) {
-            get_cmd(blocks[i].command,status_bar[i]);
+    for (u32 i = 0; i < conf->blocks_len; i++) {
+        if ((conf->blocks[i].interval != 0 && time % conf->blocks[i].interval == 0) || time == -1) {
+            get_cmd(conf->blocks[i].command,status_bar[i]);
         }
     }
 }
 
 void get_sigcmds(u32 signal) {
-    for (u32 i = 0; i < BLOCKS_LENGTH; i++) {
-        if (blocks[i].signal == signal) {
-            get_cmd(blocks[i].command,status_bar[i]);
+    for (u32 i = 0; i < conf->blocks_len; i++) {
+        if (conf->blocks[i].signal == signal) {
+            get_cmd(conf->blocks[i].command,status_bar[i]);
         }
     }
 }
@@ -64,9 +64,9 @@ void get_sigcmds(u32 signal) {
 void setup_signals(void) {
     struct sigaction sa = {0};
     sa.sa_handler = sig_handler;
-    for (u32 i = 0; i < BLOCKS_LENGTH; i++) {
-        if (blocks[i].signal > 0) {
-            sigaction(SIGRTMIN + blocks[i].signal, &sa, NULL);
+    for (u32 i = 0; i < conf->blocks_len; i++) {
+        if (conf->blocks[i].signal > 0) {
+            sigaction(SIGRTMIN + conf->blocks[i].signal, &sa, NULL);
         }
     }
 }
@@ -74,10 +74,10 @@ void setup_signals(void) {
 bool status_changed(char *str, char *last) {
     strcpy(last, str);
     str[0] = '\0';
-    for (u32 i = 0; i < BLOCKS_LENGTH; i++) {
+    for (u32 i = 0; i < conf->blocks_len; i++) {
         strcat(str, status_bar[i]);
     }
-    str[strlen(str)-strlen(delim)] = '\0';
+    str[strlen(str)-strlen(conf->delimeter)] = '\0';
     return strcmp(str, last);
 }
 
@@ -122,14 +122,26 @@ void terminate_handler(i32 signum) {
     status_continue = false; 
 }
 
+void get_config_path(char *path) {
+    struct passwd *pw = getpwuid(getuid());
+    const char *homedir = pw->pw_dir;
+    const char *confpath = "/.config/sblocks/config.toml";
+    strcat(path, homedir);
+    strcat(path, confpath);
+}
+
 i32 main(void) {
-    if (!setupX()) {
+    char path[100];
+    get_config_path(path);
+    conf = config_init(path);
+    if (!conf || !setupX()) {
         return EXIT_FAILURE;
     }
+    
     signal(SIGTERM, terminate_handler);
     signal(SIGINT, terminate_handler);
     status_loop();
     XCloseDisplay(dpy);
+    config_deinit(conf);
     return EXIT_SUCCESS;
 }
-
