@@ -20,6 +20,7 @@ NOTE:
 - The maximum number of blocks is 20. 
 */
 #define MAX_DELIM_LEN 3
+#define MIN_OUTPUT_LEN 4
 #define MAX_OUTPUT_LEN 100
 #define MAX_BLOCKS_LEN  20
 #define STATUS_LEN  (MAX_BLOCKS_LEN * MAX_OUTPUT_LEN + 1)

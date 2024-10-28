@@ -38,6 +38,10 @@ void get_cmd(const char *command, char *output) {
     const u32 delim_len = strlen(conf->delimeter)+1;
     fgets(output, MAX_OUTPUT_LEN-delim_len, cmd_file);
     u32 output_len = strlen(output);
+    if (output_len < MIN_OUTPUT_LEN) {
+	pclose(cmd_file);
+	return;
+    }
 
     /* Only chop off newline if one is present at the end */
     output_len = output[output_len-1] == '\n' ? output_len-1 : output_len;
