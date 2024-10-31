@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-typedef int32_t   i32;
-typedef uint32_t  u32;
+typedef int32_t i32;
+typedef uint32_t u32;
 
 typedef struct Block Block;
 struct Block {
@@ -17,6 +17,7 @@ struct Block {
 NOTE:
 - The delimeter can be 3 characters long at most.
 - The maximum number of characters for the output is 100.
+- The minimum number of characters for the output is 4.
 - The maximum number of blocks is 20. 
 */
 #define MAX_DELIM_LEN 3

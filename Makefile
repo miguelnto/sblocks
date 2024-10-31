@@ -1,5 +1,7 @@
 include config.mk
 
+SRCDIR = src
+BIN = bin
 SRC = ${SRCDIR}/*.c
 
 all: dirs options ${MAIN} 
