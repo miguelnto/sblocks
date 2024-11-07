@@ -16,7 +16,7 @@ options:
 	@echo "CC = ${CC}"
 
 ${MAIN}: 
-	${CC} ${CFLAGS} ${LDFLAGS} ${SRC} -o ${BIN}/$@ 
+	${CC} ${CFLAGS} ${SRC} -o ${BIN}/$@ ${LDFLAGS}
 
 install: all
 	mkdir -p ${DESTDIR}${INSTALLDIR}

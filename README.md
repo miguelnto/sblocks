@@ -14,8 +14,8 @@ You specify commands (which are scripts or anything accessible in your PATH), an
 
 - C99 Compiler
 - GNU Make
-- libx11
-- libfreetype2
+- libX11
+- libXft
 - [libtoml](https://github.com/miguelnto/libtoml)
 
 ## Installation
