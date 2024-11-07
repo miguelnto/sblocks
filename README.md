@@ -85,7 +85,7 @@ delimeter = " | "
 
 # Here you'll declare an array of blocks.
 # Each block contains a command, an interval and a signal.
-# You can declare 20 blocks at most.
+# You can declare 10 blocks at most.
 # This can be changed in config.h. Recompile the program to apply the changes.
 [[block]]
 command = "battery"

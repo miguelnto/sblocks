@@ -35,17 +35,13 @@ void get_cmd(const char *command, char *output) {
         return;
     }
 
-    const u32 delim_len = strlen(conf->delimeter)+1;
-    fgets(output, MAX_OUTPUT_LEN-delim_len, cmd_file);
+    fgets(output, MAX_OUTPUT_LEN, cmd_file);
     u32 output_len = strlen(output);
-    if (output_len < MIN_OUTPUT_LEN) {
-	pclose(cmd_file);
-	return;
-    }
 
-    /* Only chop off newline if one is present at the end */
-    output_len = output[output_len-1] == '\n' ? output_len-1 : output_len;
-    strncpy(output+output_len, conf->delimeter, delim_len);   
+    /* Remove '\n' if one is present at the end */
+    if (output[output_len-1] == '\n') {
+        output[output_len-1] = '\0';
+    }
     pclose(cmd_file);
 }
 
@@ -80,6 +76,7 @@ bool status_changed(char *str, char *last) {
     str[0] = '\0';
     for (u32 i = 0; i < conf->blocks_len; i++) {
         strcat(str, status_bar[i]);
+	strcat(str, conf->delimeter);
     }
     str[strlen(str)-strlen(conf->delimeter)] = '\0';
     return strcmp(str, last);
@@ -135,7 +132,7 @@ void get_config_path(char *path) {
 }
 
 i32 main(void) {
-    char path[100];
+    char path[300] = {0};
     get_config_path(path);
     conf = config_init(path);
     if (!conf || !setupX()) {
