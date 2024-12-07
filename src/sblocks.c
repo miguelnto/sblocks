@@ -75,8 +75,10 @@ bool status_changed(char *str, char *last) {
     strcpy(last, str);
     str[0] = '\0';
     for (u32 i = 0; i < conf->blocks_len; i++) {
-        strcat(str, status_bar[i]);
-	strcat(str, conf->delimeter);
+	if (strlen(status_bar[i]) > 1) {
+	    strcat(str, status_bar[i]);
+	    strcat(str, conf->delimeter);
+	}
     }
     str[strlen(str)-strlen(conf->delimeter)] = '\0';
     return strcmp(str, last);
