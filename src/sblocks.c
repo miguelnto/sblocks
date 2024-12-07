@@ -39,8 +39,10 @@ void get_cmd(const char *command, char *output) {
     u32 output_len = strlen(output);
 
     /* Remove '\n' if one is present at the end */
-    if (output[output_len-1] == '\n') {
-        output[output_len-1] = '\0';
+    if (output_len > 1) {
+        if (output[output_len-1] == '\n') {
+            output[output_len-1] = '\0';
+        }
     }
     pclose(cmd_file);
 }
@@ -75,10 +77,8 @@ bool status_changed(char *str, char *last) {
     strcpy(last, str);
     str[0] = '\0';
     for (u32 i = 0; i < conf->blocks_len; i++) {
-	if (strlen(status_bar[i]) > 1) {
-	    strcat(str, status_bar[i]);
-	    strcat(str, conf->delimeter);
-	}
+        strcat(str, status_bar[i]);
+	strcat(str, conf->delimeter);
     }
     str[strlen(str)-strlen(conf->delimeter)] = '\0';
     return strcmp(str, last);
